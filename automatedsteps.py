@@ -20,7 +20,16 @@ import json
 import image_fns as imgFns
 import excel_fns as xlFns
 from pulse_init_locator import execute_analysis
-
+"""
+README:
+This program creates an automated pipeline of the Jelly Video Analysis process.
+Users only need to change the contents of the lists below in order to set up
+multiple videos for analysis. There have been some examples left below. The
+pipeline will keep running even if one video errors out, and the errors will be
+displayed at the end. Note that this particular set up only works for Mike's
+Desktop 1 and will need to be slightly altered for each subsequent computer.
+Author: Bernard Chan
+"""
 start_time = time.time()
 
 video_dir = r"I:\Jelly_Videos_Archive_2\Jelly31or32\20200416"
@@ -111,7 +120,7 @@ start_times = ["00:00:00",
                "63:25:13",
                "64:53:13",
                "67:25:53"
-                            ]   #format is 00:00:00
+                            ]   #format is 00:00:00 HR:MIN:SEC
 
 durations = ["05:56:49",
              "02:30:30",
@@ -178,44 +187,40 @@ assert len(start_times) == len(durations) == len(specific_vids) == len(centers) 
 
 #run ffmpeg with changing parameters
 
-# for i in range(len(start_times)):
-#     try:
-#         os.chdir(r"C:\Users\Mike's")
-#         os.system("ffmpeg -ss " + start_times[i] + " -i " + video_files[i] + " -r 120 -q 0 -t " + durations[i] + " " + jpg_files[i])
-#     except:
-#         errors.append("ffmpeg error on video " + str(i))
-#         continue
+for i in range(len(start_times)):
+    try:
+        os.chdir(r"C:\Users\Mike's")
+        os.system("ffmpeg -ss " + start_times[i] + " -i " + video_files[i] + " -r 120 -q 0 -t " + durations[i] + " " + jpg_files[i])
+    except:
+        errors.append("ffmpeg error on video " + str(i))
+        continue
 
 
-# # ##run movement_locator with changing parameters
-# #
-# for i in range(len(start_times)):
-#     try:
-#         if not os.path.exists(jpg_files[i][:-9] + r"\outputs"):
-#             os.mkdir(jpg_files[i][:-9] + r"\outputs")
-#         jpgList = os.listdir(jpg_files[i][:-9])
-#         length = len(jpgList) // 4
-#         core1 = []
-#         core2 = []
-#         core3 = []
-#         core4 = []
-#         for x in range(0, length):
-#             core1.append(jpgList[x])
-#         for x in range(length, length * 2):
-#             core2.append(jpgList[x])
-#         for x in range(length * 2, length * 3):
-#             core3.append(jpgList[x])
-#         for x in range(length * 3, len(jpgList) - 1):
-#             core4.append(jpgList[x])
-#         with open(r"C:\Users\Mike's\Dropbox\Fellyjish\jelly-test\core2fileMap_" + specific_vids[i][0] + ".txt", "w") as file:  #WHERE CORE2FILEMAP IS DUMPED
-#             file.write(json.dumps({"1": core1, "2": core2, "3": core3, "4": core4}))
-#
-#     except Exception as e:
-#        errors.append("Movement locator error on video " + str(i) + str(e))
-#
-# #import everything we need for pulse init locator
+# ##run movement_locator with changing parameters
 
-sleep(5) #DO NOT REMOVE THIS
+for i in range(len(start_times)):
+    try:
+        if not os.path.exists(jpg_files[i][:-9] + r"\outputs"):
+            os.mkdir(jpg_files[i][:-9] + r"\outputs")
+        jpgList = os.listdir(jpg_files[i][:-9])
+        length = len(jpgList) // 4
+        core1 = []
+        core2 = []
+        core3 = []
+        core4 = []
+        for x in range(0, length):
+            core1.append(jpgList[x])
+        for x in range(length, length * 2):
+            core2.append(jpgList[x])
+        for x in range(length * 2, length * 3):
+            core3.append(jpgList[x])
+        for x in range(length * 3, len(jpgList) - 1):
+            core4.append(jpgList[x])
+        with open(r"C:\Users\Mike's\Dropbox\Fellyjish\jelly-test\core2fileMap_" + specific_vids[i][0] + ".txt", "w") as file:  #WHERE CORE2FILEMAP IS DUMPED
+            file.write(json.dumps({"1": core1, "2": core2, "3": core3, "4": core4}))
+
+    except Exception as e:
+       errors.append("Movement locator error on video " + str(i) + str(e))
 
 ##run pulse init locator with changing parameters
 for i in range(len(start_times)):
@@ -236,6 +241,3 @@ for i in range(len(start_times)):
 print("--- %s seconds ---" % (time.time() - start_time))
 for error in errors:
     print(error)
-
-
-
