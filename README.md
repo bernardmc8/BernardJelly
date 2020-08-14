@@ -1,4 +1,4 @@
-# BernardJelly
+# JellyDreamers
 ## Project Summary
 These Python projects, created by [Bernard Chan]( https://github.com/bernardmc8), are centered around improving the efficiency and speed of the video analysis pipeline for UC Berkeley Professor Richard Harland's Jellydreamers lab. Jellydreamers aims to understand the function of sleep in jellyfish through wet-lab experiments and tracking jellyfish pulse activity using Python video analysis and data science techniques. 
 
